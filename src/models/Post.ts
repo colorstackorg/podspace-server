@@ -4,25 +4,15 @@ import TextService from '../services/TextService';
 import { Model } from '../utils/constants';
 import { BaseModel, ID } from '../utils/types';
 import { CommentDocument } from './Comment';
-import { ReactionDocument } from './Reaction';
+import Reaction, { ReactionDocument } from './Reaction';
 import User, { UserDocument } from './User';
 
-/**
- * TODO: (3.01)
- * - Read this enum.
- * - Delete this comment.
- */
 export enum PostType {
   HELP = 'HELP', // Asking for help...
   TIL = 'TIL', // Today I learned...
   WIN = 'WIN' // Sharing a win...
 }
 
-/**
- * TODO: (3.02)
- * - Read this interface.
- * - Delete this comment once you've done so.
- */
 interface IPost extends BaseModel {
   /**
    * User that is associated with the creation of the post.
@@ -40,7 +30,7 @@ interface IPost extends BaseModel {
   content: string;
 
   /**
-   * List of reactions that were created on the reaction.
+   * List of reactions that were created on the post.
    */
   reactions: PopulatedDoc<ReactionDocument>[];
 
@@ -48,21 +38,17 @@ interface IPost extends BaseModel {
    * Type of the post that was created. This can be null, if no PostType
    * if specified.
    */
-  type?: PostType;
+  type: PostType;
 }
 
 export type PostDocument = Document<{}, {}, IPost> & IPost;
 
 const postSchema: Schema<PostDocument> = new Schema<PostDocument>(
   {
-    /**
-     * TODO: (3.03)
-     * - Create the schema for the Posts that we'll save in the database using
-     * the interface above as a reference.
-     * - Delete this comment and the example field.
-     * - Add comment(s) to explain your work.
-     */
-    exampleField: { required: true, type: String }
+    // adding fields to postSchema
+    author: { ref: Model.USER, required: true, type: ID }, // author will be referencing the User model
+    content: { required: true, type: String }, // the content of the post is required, it will simply be a string
+    type: { required: false, type: String }
   },
   {
     timestamps: true,
